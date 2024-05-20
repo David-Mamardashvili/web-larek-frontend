@@ -38,7 +38,7 @@ export class AppState extends Model<IAppState> {
     }
 
     appendBasket(item: ProductItem) {
-        this.basket.push(newItem);
+        this.basket.push(item);
     }
 
     removeBasket(id: string) {
