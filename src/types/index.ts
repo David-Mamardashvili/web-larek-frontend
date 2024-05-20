@@ -95,13 +95,6 @@ export interface IOrderPayment {
     address: string;
 }
 
-export interface IOrderForm {
-    payment: string;
-    address: string;
-    email: string;
-    phone: string;
-}
-
 //Page.ts
 export interface IPage {
     counter: number;

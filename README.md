@@ -40,568 +40,577 @@ npm run build
 ```
 yarn build
 ```
+## Основные интерфейсы и типы 
 
-## Интерфейсы и типы
-import { categoryChoice } from './../utils/constants';
-import { ProductItem } from "../components/AppData";
+  ### index.ts
 
-//index.ts
-export interface ApiResponse {
-    items: IProductItem[];
-}
+  // Ответ сервера
+  interface ApiResponse {
+      // Товары
+      items: IProductItem[];
+  }
 
-//Form.ts
-export interface IFormState {
-    valid: boolean;
-    errors: string[];
-}
+  ### Form.ts
 
-export type FormErrors = Partial<Record<keyof IOrderForm, string>>;
+  // Тип ошибок формы
+  type FormErrors = Partial<Record<keyof IOrderForm, string>>;
 
-//Modal.ts
-export interface IModalData {
-    content: HTMLElement;
-}
+  ### AppData.ts
 
-//AppData.ts
-export interface IProductItem {
-    picked: boolean;
-    id: string;
-    description: string;
-    image: string;
-    title: string;
-    category: string;
-    price: number;
-}
-
-export interface IAppState {
-    basket: IProductItem[];
-    catalog: IProductItem;
-    order: IOrder;
-    formErrors: FormErrors;
-}
-
-//Basket.ts
-export interface IBasketView {
-    items: HTMLElement[];
-    total: number;
-}
-
-export interface IBasketItem extends IProductItem {
-    id: string;
-    index: number;
-}
-  
-export interface IBasketItemActions {
-    onClick: (event: MouseEvent) => void;
-}
-
-//Card.ts
-export interface ICardActions {
-    onClick: (event: MouseEvent) => void;
-}
-
-export interface ICard {
-    picked: boolean;
-    id: string;
-    category: string;
-    title: string;
-    image: string;
-    price: number | null;
-    description: string;
-}
-
-//Contacts.ts
-export interface IContacts {
-    email: string;
-    phone: string;
-}
-
-//Order.ts
-export interface IOrder {
-    items: string[];
-    total: number;
-    payment: string;
-    address: string;
-    email: string;
-    phone:string;
-}
-
-export interface IOrderForm {
-    payment: string;
-    address: string;
-    email: string;
-    phone: string;
-}
-
-export interface IOrderPayment {
-    payment: string;
-    address: string;
-}
-
-export interface IOrderForm {
-    payment: string;
-    address: string;
-    email: string;
-    phone: string;
-}
-
-//Page.ts
-export interface IPage {
-    counter: number;
-    catalog: HTMLElement[];
-    locked: boolean;
-}
-
-export type CategoryOptions = 'софт-скил' | 'другое' | 'дополнительное' | 'кнопка' | 'хард-скил';
-
-export type CategoryChoice = {
-    [key in CategoryOptions]: string;
-};
-
-//Success.ts
-export interface ISuccessActions {
-    onClick: (event: MouseEvent) => void;
+  // Интерфейс товара в магазине
+  interface IProductItem {
+      // Добавлен товар в корзину или нет
+      picked: boolean;
+      // id товара
+      id: string;
+      // Описание товара
+      description: string;
+      // Изображение товара
+      image: string;
+      // Название товара
+      title: string;
+      // Категория товара
+      category: string;
+      // Цена товара
+      price: number;
   }
   
- export interface ISuccess {
-    description: number;
-}
+  // Интерфейс состояния приложения
+  interface IAppState {
+
+  // Массив товаров в каталоге
+  catalog: ProductItem[];
+
+  // Массив товаров в корзине
+  basket: ProductItem[];
+
+  // Объект заказа
+  order: IOrder;
+
+  // Объект ошибок форм
+  formErrors: FormErrors;
+
+  // Возвращает количество товаров в корзине
+  basketItemsLength(): number;
+
+  // Добавляет id товаров в заказ
+  setItems(): void;
+
+  // Считает общую сумму заказа
+  totalPrice(): number;
+
+  // Добавляет новый продукт в корзину
+  appendBasket(item: ProductItem): void;
+  
+  // Удаляет продукт из корзины
+  removeBasket(id: string): void;
+
+  // Полностью очищает корзину
+  absoluteBasketClear(): void;
+
+  // Создает каталог товаров из товаров
+  setCatalog(products: ProductItem[]): void;
+
+  // Сбрасывает выбранные продукты в каталоге товаров
+  resetPicked(): void;
+
+  // Валидирует заказ
+  validateOrder(): boolean;
+
+  // Валидирует контакты
+  validateContacts(): boolean;
+
+  // Валидирует все формы
+  validation(field: keyof IOrderForm, value: string): void;
+
+  // Очищает заказ после покупки
+  orderReset(): void;
+
+  }
+
+  ### Basket.ts
+
+  // Интерфейс корзины товаров
+  interface IBasketView {
+      // Массив товаров
+      items: HTMLElement[];
+      //Сумма стоимости товаров
+      total: number;
+  }
+
+  // Интерфейс товара в корзине
+  interface IBasketItem extends IProductItem {
+      // id товара
+      id: string;
+      // Индекс товара
+      index: number;
+  }
+  
+  ### Card.ts
+
+  // Интерфейс карточки на главной странице
+  interface ICard {
+      // Добавлен товар в корзину или нет
+      picked: boolean;
+      // id товара
+      id: string;
+      // Описание товара
+      description: string;
+      // Изображение товара
+      image: string;
+      // Название товара
+      title: string;
+      // Категория товара
+      category: string;
+      // Цена товара
+      price: number;
+  }
+
+  ### Contacts.ts
+
+  // Интерфейс окна контактов 
+  interface IContacts {
+      // Почта
+      email: string;
+      // Телефон
+      phone: string;
+  }
+
+  ### Order.ts
+
+  // Интерфейс заказа 
+  interface IOrder {
+      // Массив товаров
+      items: string[];
+      // Сумма стоимости товаров
+      total: number;
+      // Способ оплаты
+      payment: string;
+      // Адрес 
+      address: string;
+      // Почта
+      email: string;
+      // Телефон
+      phone:string;
+  }
+
+  // Интерфейс формы заказа
+  interface IOrderForm {
+      // Способ оплаты
+      payment: string;
+      // Адрес
+      address: string;
+      // Почта
+      email: string;
+      // Телефон
+      phone: string;
+  }
+
+  // Интерфейс оплаты заказа
+  interface IOrderPayment {
+      // Способ оплаты
+      payment: string;
+      // Адрес
+      address: string;
+  }
+
+
+  ### Page.ts
+
+  // Интерфейс главной страницы
+  interface IPage {
+      // Счетчик товара корзины
+      counter: number;
+      // Каталог товаров 
+      catalog: HTMLElement[];
+      // Блокировщик прокрутки страницы
+      locked: boolean;
+  }
+
+  // Тип категории карточки
+  type CategoryOptions = 'софт-скил' | 'другое' | 'дополнительное' | 'кнопка' | 'хард-скил';
+
+  // Тип ключа в категории карточки
+  type CategoryChoice = {
+      [key in CategoryOptions]: string;
+  };
+
+  ### Success.ts
+  
+  // Интерфейс успешной оплаты
+  interface ISuccess {
+      // Описане успешной оплаты
+      description: number;
+  }
+
 
 ## Model
-//Класс базовой модели
-abstract class Model<T> {
-    constructor(data: Partial<T>, protected events: IEvents) {
-        Object.assign(this, data);
-    }
 
-    // Сообщить всем что модель поменялась
-    emitChanges(event: string, payload?: object) {
-        // Состав данных можно модифицировать
-        this.events.emit(event, payload ?? {});
-    }
+### Класс Model, класс базовой модели.
+  Методы:
 
-    // далее можно добавить общие методы для моделей
-}
+  // Сообщает всем что модель поменялась
+  emitChanges(event: string, payload?: object);
 
-//Класс состояния приложения
-export class AppState extends Model<IAppState> {
-  // Массив товаров
+### Класс AppState, класс состояния приложения.
+  Свойства:
+
+  // Массив товаров в каталоге
   catalog: ProductItem[];
-  // Объект заказа
-  order: IOrder = {
-    items: [],
-    total: null,
-    payment: '',
-    address: '',
-    email: '',
-    phone: '',
-  };
+
   // Массив товаров в корзине
-  basket: ProductItem[] = [];
+  basket: ProductItem[];
+
+  // Объект заказа
+  order: IOrder;
+
   // Объект ошибок форм
-  formErrors: FormErrors = {};
+  formErrors: FormErrors;
 
-  /**
-   * Метод подсчета количества товаров в корзине
-   * @returns Количество товаров
-   */
-  basketItemsLength(): number {
-    return this.basket.length;
-  }
+  Методы:
 
-  /**
-   * Метод добавления id товаров в заказ
-   */
-  setItems(): void {
-    this.order.items = this.basket.map(item => item.id);
-  }
+  // Возвращает количество товаров в корзине
+  basketItemsLength(): number;
 
-  /**
-   * Метод подсчета общей суммы заказа
-   * @returns Общая сумма товаров в корзине
-   */
-  totalPrice(): number {
-    return this.basket.reduce((total, item) => total + item.price, 0);
-  }
+  // Добавляет id товаров в заказ
+  setItems(): void;
 
-  /**
-   * Метод добавления продукта в корзину
-   * @param newItem - Новый продукт для добавления в корзину
-   */
-  appendBasket(newItem: ProductItem): void {
-    this.basket.push(newItem);
-  }
+  // Считает общую сумму заказа
+  totalPrice(): number;
 
-  /**
-   * Метод удаления продукта из корзины
-   * @param id - Идентификатор продукта для удаления
-   */
-  removeBasket(id: string): void {
-    this.basket = this.basket.filter(item => item.id !== id);
-  }
+  // Добавляет новый продукт в корзину
+  appendBasket(item: ProductItem): void;
+  
+  // Удаляет продукт из корзины
+  removeBasket(id: string): void;
 
-  /**
-   * Метод полной очистки корзины
-   */
-  absoluteBasketClear(): void {
-    this.basket = [];
-  }
+  // Полностью очищает корзину
+  absoluteBasketClear(): void;
 
-  /**
-   * Метод создания каталога
-   * @param products - Массив продуктов для каталога
-   */
-  setCatalog(products: ProductItem[]): void {
-    this.catalog = products.map(item => new ProductItem({ ...item, picked: false }, this.events));
-    this.emitChanges('catalog:changed', { catalog: this.catalog });
-  }
+  // Создает каталог товаров из товаров
+  setCatalog(products: ProductItem[]): void;
 
-  /**
-   * Метод для сброса выбора продуктов в каталоге
-   */
-  resetPicked(): void {
-    for (const product of this.catalog) {
-      product.picked = false;
-    }
-  }
+  // Сбрасывает выбранные продукты в каталоге товаров
+  resetPicked(): void;
 
-  /**
-   * Метод валидации заказа
-   * @returns Возвращает true, если заказ валиден
-   */
-  validateOrder(): boolean {
-    const errors: FormErrors = {};
-    if (!this.order.address) errors.address = 'Необходимо указать адрес';
-    if (!this.order.payment) errors.payment = 'Необходимо указать способ оплаты';
-    this.formErrors = errors;
-    this.events.emit('orderFormErrors:change', this.formErrors);
-    return !Object.keys(errors).length;
-  }
+  // Валидирует заказ
+  validateOrder(): boolean;
 
-  /**
-   * Метод валидации контактов
-   * @returns Возвращает true, если контактная информация валидна
-   */
-  validateContacts(): boolean {
-    const errors: FormErrors = {};
-    if (!this.order.email) errors.email = 'Необходимо указать email';
-    if (!this.order.phone) errors.phone = 'Необходимо указать телефон';
-    this.formErrors = errors;
-    this.events.emit('contactsFormErrors:change', this.formErrors);
-    return !Object.keys(errors).length;
-  }
+  // Валидирует контакты
+  validateContacts(): boolean;
 
-  /**
-   * Метод для заполнения всех полей и валидации формы
-   * @param field - Поле формы заказа
-   * @param value - Значение поля формы заказа
-   */
-  validation(field: keyof IOrderForm, value: string): void {
-    this.order[field] = value;
-    if (this.validateContacts()) this.events.emit('contacts:ready', this.order);
-    if (this.validateOrder()) this.events.emit('order:ready', this.order);
-  }
+  // Валидирует все формы
+  validation(field: keyof IOrderForm, value: string): void;
 
-  /**
-   * Метод полной очистки заказа после покупки товара
-   */
-  orderReset(): void {
-    this.order = {
-      items: [],
-      total: null,
-      address: '',
-      email: '',
-      phone: '',
-      payment: '',
-    };
-  }
-}
+  // Очищает заказ после покупки
+  orderReset(): void;
 
 ## View
-//Базовый компонент
-export abstract class Component<T> {
-    protected constructor(protected readonly container: HTMLElement) {
-        // Учитывайте что код в конструкторе исполняется ДО всех объявлений в дочернем классе
-    }
 
-    // Инструментарий для работы с DOM в дочерних компонентах
+### Класс Component, класс базового компонента.
+  Методы:
 
-    // Переключить класс
-    toggleClass(element: HTMLElement, className: string, force?: boolean) {
-        element.classList.toggle(className, force);
-    }
+  // Переключает класс
+  toggleClass(element: HTMLElement, className: string, force?: boolean);
 
-    // Установить текстовое содержимое
-    protected setText(element: HTMLElement, value: unknown) {
-        if (element) {
-            element.textContent = String(value);
-        }
-    }
+  // Устанавливает текстовое содержимое
+  protected setText(element: HTMLElement, value: unknown);
 
-    // Сменить статус блокировки
-    setDisabled(element: HTMLElement, state: boolean) {
-        if (element) {
-            if (state) element.setAttribute('disabled', 'disabled');
-            else element.removeAttribute('disabled');
-        }
-    }
+  // Меняет статус блокировки 
+  setDisabled(element: HTMLElement, state: boolean);
 
-    // Скрыть
-    protected setHidden(element: HTMLElement) {
-        element.style.display = 'none';
-    }
+  // Скрывает элемент
+  protected setHidden(element: HTMLElement);
 
-    // Показать
-    protected setVisible(element: HTMLElement) {
-        element.style.removeProperty('display');
-    }
+  // Показывает элемент
+  protected setVisible(element: HTMLElement);
 
-    // Установить изображение с алтернативным текстом
-    protected setImage(element: HTMLImageElement, src: string, alt?: string) {
-        if (element) {
-            element.src = src;
-            if (alt) {
-                element.alt = alt;
-            }
-        }
-    }
-
-    // Вернуть корневой DOM-элемент
-    render(data?: Partial<T>): HTMLElement {
-        Object.assign(this as object, data ?? {});
-        return this.container;
-    }
-}
-
-//Класс корзины 
-export class Basket extends Component<IBasketView> {
-  // Ссылки на внутренние элементы
-  protected _items: HTMLElement;
-  protected _total: HTMLElement;
-  protected _button: HTMLButtonElement;
-
-  /**
-   * Конструктор принимает контейнер и обработчик событий
-   * @param container - Родительский элемент контейнера корзины
-   * @param events - Обработчик событий для взаимодействия с корзиной
-   */
-  constructor(container: HTMLElement, protected events: IEvents) {}
-
-  /**
-   * Сеттер списка товаров
-   * @param items - Массив элементов товаров для отображения в корзине
-   */
-  set items(items: HTMLElement[]) {
-    this._items.replaceChildren(...items);
-    this._button.disabled = items.length <= 0;
-  }
-
-  /**
-   * Сеттер общей суммы
-   * @param total - Общая стоимость товаров в корзине
-   */
-  set total(total: number) {
-    this.setText(this._total, total + ' синапсов');
-  }
-
-  /**
-   * Метод блокирующий кнопку 
-   */
-  disableButton(): void {
-    this._button.disabled = true;
-  }
-
-  /**
-   * Метод для обновления индексов
-   */
-  indexReset(): void {
-    Array.from(this._items.children).forEach((item, index) => {
-      item.querySelector('.basket__item-index')!.textContent = (index + 1).toString();
-    });
-  }
-}
-
-//Класс карточки
-export class Card extends Component<ICard> {
-  // Ссылки на внутренние элементы карточки
-  protected _title: HTMLElement;
-  protected _image: HTMLImageElement;
-  protected _category: HTMLElement;
-  protected _price: HTMLElement;
-  protected _button: HTMLButtonElement;
-
-  /**
-   * Конструктор принимает имя блока, родительский контейнер
-   * и объект с колбэк функциями
-   * @param blockName - Имя блока карточки
-   * @param container - Родительский контейнер карточки
-   * @param actions - Объект с функциями-колбэками для действий
-   */
-  constructor(protected blockName: string, container: HTMLElement, actions?: ICardActions) {}
-
-  /**
-   * Сеттер id
-   */
-  set id(value: string) {
-    this.container.dataset.id = value;
-  }
-  /**
-   * Геттер id
-   */
-  get id(): string {
-    return this.container.dataset.id || '';
-  }
-
-  /**
-   * Сеттер названия
-   */
-  set title(value: string) {
-    this.setText(this._title, value);
-  }
-    /**
-   * Геттер названия
-   */
-  get title(): string {
-    return this._title.textContent || '';
-  }
-
-  /**
-   * Сеттер картинки
-   */
-  set image(value: string) {
-    this._image.src = CDN_URL + value;
-  }
-
-  /**
-   * Сеттер определения выбора товара
-   */
-  set picked(value: boolean) {
-    if (!this._button.disabled) {
-      this._button.disabled = value;
-    }
-  }
-
-  /**
-   * Сеттер цены
-   */
-  set price(value: number | null) {
-    if (value !== null) {
-      this.setText(this._price, formatNumberWithSpaces(value) + ' синапсов');
-    } else {
-      this.setText(this._price, 'Бесценно');
-    }
-    if (!value && this._button) {
-      this._button.disabled = true;
-    }
-  }
-
-  /**
-   * Сеттер категории
-   */
-  set category(value: CategoryOptions) {
-    this.setText(this._category, value);
-    this._category.classList.add(categoryChoice[value]);
-  }
-}
-
-//Класс контактов
-export class Contacts extends Form<IContacts> {
+  // Устанавливает изображение с алтернативным текстом
+  protected setImage(element: HTMLImageElement, src: string, alt?: string);
   
-   /**
-   * Конструктор принимает контейнер и обработчик событий
-   * @param container - Родительский элемент контейнера корзины
-   * @param events - Обработчик событий для взаимодействия с корзиной
-   */
-  constructor(container: HTMLFormElement, events: IEvents);
-}
+  // Возвращает корневой DOM-элемент
+  render(data?: Partial<T>): HTMLElement;
 
-//Класс заказа
-export class Order extends Form<IOrder> {
-  // Ссылки на внутренние элементы
-  protected _online: HTMLButtonElement;
-  protected _uponReceipt: HTMLButtonElement;
+### Класс Basket, класс корзины товаров.
 
-  /**
-   * Конструктор принимает имя блока, родительский элемент и обработчик событий
-   * @param blockName - Имя блока
-   * @param container - Родительский элемент контейнера формы заказа
-   * @param events - Обработчик событий для взаимодействия с формой заказа
-   */
-  constructor(protected blockName: string, container: HTMLFormElement, protected events: IEvents) {}
+  Свойства:
 
-  /**
-   * Метод, отключающий подсвечивание кнопок
-   */
-    disableButtons(): void {
-        this._uponReceipt.classList.remove('button_active');
-        this._online.classList.remove('button_active');
-    }
- }
+  // Список товаров
+  protected _items: HTMLElement;
 
+  // Сумма всех товаров
+  protected _total: HTMLElement;
 
-//Класс страницы
-export class Page extends Component<IPage> {
-  // Ссылки на внутренние элементы
-  protected _counter: HTMLElement;
-  protected _store: HTMLElement;
-  protected _wrapper: HTMLElement;
-  protected _basket: HTMLElement;
-
-   /**
-   * Конструктор принимает имя блока, родительский элемент и обработчик событий
-   * @param container - Родительский элемент контейнера формы заказа
-   * @param events - Обработчик событий для взаимодействия с формой заказа
-   */
-  constructor(container: HTMLElement, protected events: IEvents) {}
-
-  // Сеттер считающий товары
-  set counter(value: number);
-
-  // Сеттер каталога карточек
-  set catalog(items: HTMLElement[]);
-
-  // Сеттер для блокировки прокрутки страницы
-  set locked(value: boolean);
-}
-
-//Класс успешной покупки
-export class Success extends Component<ISuccess> {
-// Ссылки на внутренние элементы
+  // Кнопка "Оформить"
   protected _button: HTMLButtonElement;
+
+  Методы:
+
+  // Устанавливает список товаров
+  set items(items: HTMLElement[]);
+  
+  // Устанавливает сумму всех товаров
+  set total(total: number);
+
+  // Блокирует кнопку "Оформить"
+  disableButton(): void;
+
+  // Обновляет индексы товаров
+  indexReset(): void;
+
+### Класс BasketItem, класс товара в корзине товаров.
+
+  Свойства:
+    
+  // Индекс товара
+  protected _index: HTMLElement;
+
+  // Название товара
+  protected _title: HTMLElement;
+
+  // Цена товара
+  protected _price: HTMLElement;
+
+  // Кнопка "Корзина" товара
+  protected _button: HTMLButtonElement;
+
+  Методы:
+
+  // Устанавливает индекс товару
+  set index(value: number);
+
+  // Устанавливает название товару
+  set title(value: string);
+
+  // Устанавливает цену товару
+  set price(value: number)
+ 
+### Класс Card, класс товара.
+
+  Свойства:
+
+  // Название товара
+  protected _title: HTMLElement;
+
+  // Изображение товара
+  protected _image: HTMLImageElement;
+
+  // Категория товара
+  protected _category: HTMLElement;
+
+  // Цена товара
+  protected _price: HTMLElement;
+
+  // Кнопка товара
+  protected _button: HTMLButtonElement;
+
+  Методы:
+
+  // Устанавливает id товара
+  set id(value: string);
+
+  // Выводит id товара
+  get id(): string;
+
+  // Устанавливает название товара
+  set title(value: string);
+
+  // Выводит название товара
+  get title(): string;
+
+  // Устанавливает изображение товара
+  set image(value: string);
+
+  // Устанавливает определение выбора товара
+  set picked(value: boolean);
+
+  // Устанавливает цену товара
+  set price(value: number | null);
+
+  // Устанавливает категорию товара
+  set category(value: CategoryOptions);
+
+### Класс CatalogItem, класс одного товара.
+
+   * Конструктор принимает контейнер и объект с колбэк функциями
+   * container - Родительский элемент контейнера корзины
+   * actions - Объект с колбэк функциями
+
+
+  constructor(container: HTMLElement, actions?: ICardActions) {
+      super('card', container, actions);
+  }
+
+### Класс CatalogItemPreview, класс превью товара.
+
+  Свойства:
+
+  // Описание товара
   protected _description: HTMLElement;
 
-   /**
-   * Конструктор принимает имя блока, родительский контейнер
-   * и объект с колбэк функциями
-   * @param blockName - Имя блока карточки
-   * @param container - Родительский контейнер карточки
-   * @param actions - Объект с функциями-колбэками для действий
-   */
-  constructor(protected blockName: string, container: HTMLElement, actions?: ISuccessActions) {}
+  Методы:
+  
+  // Устанавливает описание товара
+  set description(value: string);
 
-    //Сеттер выведения количества списанный синапсов
-    set description(value: number) {
-        this._description.textContent = 'Списано ' + formatNumberWithSpaces(value) + ' синапсов'
+### Класс Contacts, класс контактов.
+  
+   * Конструктор принимает контейнер и обработчик событий
+   * container - Родительский элемент контейнера корзины
+   * events - Обработчик событий для взаимодействия с корзиной
+
+    constructor(container: HTMLFormElement,events: IEvents) {
+    super(container, events);
     }
-}
+
+### Класс Order, класс заказа.
+
+  Свойства:
+  
+  // Кнопка оплаты "Онлайн"
+  protected _online: HTMLButtonElement;
+
+  // Кнопка оплаты "При получении"
+  protected _uponReceipt: HTMLButtonElement;
+
+  Методы:
+
+  // Отключает подсвечивание кнопок оплаты
+  disableButtons(): void;
+
+
+### Класс Page, класс страницы.
+
+  Свойства: 
+  
+  // Счетчик товаров корзины
+  protected _counter: HTMLElement;
+
+  // Каталог товаров
+  protected _catalog: HTMLElement;
+
+  // Обёртка страницы
+  protected _wrapper: HTMLElement;
+
+  // Корзина товаров
+  protected _basket: HTMLElement;
+
+
+  Методы:
+
+  // Устанавливает количество товаров корзины
+  set counter(value: number);
+
+  // Устанавливает товары в каталог товаров
+  set catalog(items: HTMLElement[]);
+
+  // Устанавливает блокировку прокрутки страницы
+  set locked(value: boolean);
+
+
+### Класс Success, класс успешной покупки.
+
+  Свойства:
+
+  // Кнопка "За новыми покупками!"
+  protected _button: HTMLButtonElement;
+
+  // Описание покупки
+  protected _description: HTMLElement;
+
+  Методы:
+
+  // Выводит количество списанных синапсов
+  set description(value: number);
+
+## Presenter
+
+### Класс Api, класс взаимодействия с сервером.
+
+  Свойства:
+
+  // Url Api
+  readonly baseUrl: string;
+
+  // Опции
+  protected options: RequestInit;
+
+  Методы:
+
+  // Обрабатывает запрос и возвращает промис
+  protected handleResponse(response: Response): Promise<object>;
+
+  // Делает get запрос
+  get(uri: string);
+
+  // Делает post запрос
+  post(uri: string, data: object, method: ApiPostMethods = 'POST');
+
+### Класс EventEmitter, класс обрабатывающий события.
+  
+  Свойства: 
+
+  // Объект Map, событие и подписчик
+  _events: Map<EventName, Set<Subscriber>>;
+
+  Методы:
+
+  // Устанавливает обработчик на событие
+  on<T extends object>(eventName: EventName, callback: (event: T) => void);
+
+  // Снимает обработчик с события
+  off(eventName: EventName, callback: Subscriber);
+
+  // Инициирует событие с данными
+  emit<T extends object>(eventName: string, data?: T);
+
+  // Слушает все события 
+  onAll(callback: (event: EmitterEvent) => void);
+
+  // Сбрасывает все обработчики
+  offAll();
+
+  // Делает коллбек триггер, генерирующий событие при вызове
+  trigger<T extends object>(eventName: string, context?: Partial<T>);
+
 
 ## События
-//Открывает модальное окно способа оплаты
-'order:submit'
-//Открывает модальное окно контактов
-'contacts:submit'
-//Валидирует форму
-'input:change'
-//Добавляет товар в корзину
-card:toBasket'
-//Открывает корзину
-'basket:open'
-//Удаляет товар из корзины
-'basket:remove'
-//Открывает модальное окно заказа
+
+// Вызывается при нажатии на кнопку "Оформить" в окне корзины, переводит на окно оплаты заказа.
 'basket:order'
-//Изменение списка товаров
+
+// Вызывается при нажатии на кнопку "Далее" в окне оплаты заказа, переводит на окно контактов.
+'order:submit'
+
+// Вызывается при нажатии на кнопку "Оплатить" в окне контактов, переводит на окно успешной оплаты.
+'contacts:submit'
+
+// Вызывается при успешном ответе сервера после оплаты товара, переводит на окно успешной оплаты.
+'order:success'
+
+// Вызывается при нажатии на кнопку "В корзину" в окне превью карточки, добавляет товар в корзину.
+card:toBasket'
+
+// Вызывается при нажатии на кнопку "Корзина" на главной странице, открывает корзину.
+'basket:open'
+
+// Вызывается при нажатии на кнопку "Корзина" у карточки в окне корзины, удаляет товар из корзины.
+'basket:remove'
+
+// Вызывается при нажатии изменении каталога товаров на главной странице, изменяет товары на главной странице.
 'catalog':changed;
-//Открывает описание товара при клике на товар
+
+// Вызывается при нажатии на карточку на главной странице, переводит на окно описание карточки.
 'card:open'
+
+// Вызывается при заполнении формы, проводит валдицаию формы.
+'input:change'
+
+// Вызывается при вводе данных в форме в окне оплаты заказа.
+'orderFormErrors:change'
+
+// Вызывается при вводе данных в форме в окне контактов. 
+'contactsFormErrors:change'
+
+// Вызывается при закрытии модального окна.
+'modal:close'

@@ -37,7 +37,7 @@ export class AppState extends Model<IAppState> {
         return this.basket.reduce((total, item) => total + item.price, 0);
     }
 
-    appendBasket(newItem: ProductItem) {
+    appendBasket(item: ProductItem) {
         this.basket.push(newItem);
     }
 
