@@ -6,8 +6,6 @@ Web Larek Frontend — это учебный проект, разработан�
 
 <h2>Технологии:</h2>
 
-• React  
-• Redux  
 • TypeScript  
 • HTML/CSS  
 • REST API  
